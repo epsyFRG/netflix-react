@@ -8,6 +8,8 @@ function App() {
     <>
       <Navbar />
       <Main />
+      {/* <Profile /> */}
+      {/* <Settings /> */}
       <Footer />
     </>
   )
