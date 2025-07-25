@@ -1,56 +1,125 @@
 import React, { useEffect, useState } from "react"
-import "./MovieGallery.css"
+import { Carousel, Row, Col, Image, Container, Spinner } from "react-bootstrap"
 
-const OMDB_API_KEY = "your_omdb_api_key" // Sostituisci con la tua API key OMDB
+const OMDB_API_KEY = "cd3c2343"
 
-const MovieGallery = ({ title, query, onLoading, onError }) => {
-  const [movies, setMovies] = useState([])
+function chunkArray(array, size) {
+  const result = []
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size))
+  }
+  return result
+}
+
+function MovieGallery({ saga, query }) {
+  const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [itemsPerSlide, setItemsPerSlide] = useState(5)
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      setLoading(true)
-      onLoading && onLoading(true)
-      setError(null)
-      onError && onError(null)
-      try {
-        const res = await fetch(
-          `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${encodeURIComponent(query)}&type=movie`
-        )
-        const data = await res.json()
-        if (data.Response === "True") {
-          setMovies(data.Search)
-        } else {
-          setError(data.Error || "No movies found")
-          onError && onError(data.Error || "No movies found")
-        }
-      } catch (err) {
-        setError("Network error")
-        onError && onError("Network error")
-      }
-      setLoading(false)
-      onLoading && onLoading(false)
+    function handleResize() {
+      if (window.innerWidth < 600) setItemsPerSlide(2)
+      else if (window.innerWidth < 900) setItemsPerSlide(3)
+      else setItemsPerSlide(5)
     }
-    fetchMovies()
-    // eslint-disable-next-line
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  useEffect(() => {
+    setLoading(true)
+    setError(null)
+    fetch(
+      `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${encodeURIComponent(
+        query
+      )}`
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.Response === "False") {
+          setError(result.Error || "Nessun film trovato.")
+          setData([])
+        } else {
+          setData(result.Search)
+        }
+      })
+      .catch(() => setError("Errore nel caricamento dei dati."))
+      .finally(() => setLoading(false))
   }, [query])
 
+  const slides = chunkArray(data, itemsPerSlide)
+
   return (
-    <section className="movie-gallery">
-      <h2>{title}</h2>
-      {loading && <div className="loader">Loading...</div>}
-      {error && <div className="error">{error}</div>}
-      <div className="gallery-row">
-        {movies &&
-          movies.map((movie) => (
-            <div key={movie.imdbID} className="movie-card">
-              <img src={movie.Poster !== "N/A" ? movie.Poster : "/placeholder.jpg"} alt={movie.Title} />
-              <p>{movie.Title}</p>
-            </div>
+    <Container fluid className="my-4">
+      <h2 className="text-white ms-2 mb-3">{saga}</h2>
+      {loading && (
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ minHeight: 150 }}
+        >
+          <Spinner
+            animation="border"
+            variant="danger"
+            role="status"
+            style={{ width: 48, height: 48 }}
+          />
+        </div>
+      )}
+      {error && (
+        <div
+          style={{
+            color: "#fff",
+            background: "#e50914",
+            padding: "0.5rem 1rem",
+            borderRadius: 4,
+            margin: "1rem 0",
+            display: "inline-block",
+          }}
+        >
+          {error}
+        </div>
+      )}
+      {!loading && !error && data.length > 0 && (
+        <Carousel indicators={false} interval={null} className="bg-transparent">
+          {slides.map((group, idx) => (
+            <Carousel.Item key={idx}>
+              <Row className="g-2 justify-content-center">
+                {group.map((movie) => (
+                  <Col
+                    key={movie.imdbID}
+                    xs={6}
+                    sm={4}
+                    md={2}
+                    lg={2}
+                    xl={2}
+                    className="d-flex justify-content-center"
+                  >
+                    <Image
+                      src={
+                        movie.Poster !== "N/A"
+                          ? movie.Poster
+                          : "/Netflix-assets/assets/media/media0.webp"
+                      }
+                      alt={movie.Title}
+                      rounded
+                      style={{
+                        width: "100%",
+                        maxWidth: 180,
+                        height: 270,
+                        objectFit: "cover",
+                        background: "#111",
+                      }}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            </Carousel.Item>
           ))}
-      </div>
-    </section>
+        </Carousel>
+      )}
+    </Container>
   )
 }
 
