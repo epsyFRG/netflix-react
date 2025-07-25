@@ -1,0 +1,35 @@
+/* FILM COVER STILI */
+.film-cover {
+  transition: transform 0.3s cubic-bezier(0.4, 0.2, 0.2, 1), box-shadow 0.3s;
+}
+.film-cover:hover {
+  transform: scale(1.08);
+  z-index: 2;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.5);
+}
+
+.img-hover-zoom {
+  transition: transform 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.img-hover-zoom:hover {
+  transform: scale(1.08);
+  z-index: 2;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+  background-color: #181818 !important;
+  color: #fff !important;
+}
+
+/* AVATAR STILI */
+.avatar-btn .avatar-img:hover,
+.avatar-btn.selected .avatar-img {
+  border-color: #e50914 !important;
+  transform: scale(1.08);
+}
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+  background-color: #181818 !important;
+  color: #fff !important;
+}
