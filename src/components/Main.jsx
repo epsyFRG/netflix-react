@@ -35,7 +35,7 @@ const Main = () => (
         </div>
       </div>
     </div>
-    {/* Gallerie dinamiche */}
+
     <MovieGallery saga="Harry Potter" query="Harry Potter" />
     <MovieGallery saga="The Lord of the Rings" query="Lord of the Rings" />
     <MovieGallery saga="Star Wars" query="Star Wars" />
