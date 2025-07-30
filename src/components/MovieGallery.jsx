@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Carousel, Row, Col, Image, Container, Spinner } from "react-bootstrap"
+import { Link } from "react-router-dom"
 
 const OMDB_API_KEY = "cd3c2343"
 
@@ -96,22 +97,27 @@ function MovieGallery({ saga, query }) {
                     xl={2}
                     className="d-flex justify-content-center"
                   >
-                    <Image
-                      src={
-                        movie.Poster !== "N/A"
-                          ? movie.Poster
-                          : "/Netflix-assets/assets/media/media0.webp"
-                      }
-                      alt={movie.Title}
-                      rounded
-                      style={{
-                        width: "100%",
-                        maxWidth: 180,
-                        height: 270,
-                        objectFit: "cover",
-                        background: "#111",
-                      }}
-                    />
+                    <Link to={`/movie-details/${movie.imdbID}`}>
+                      <Image
+                        src={
+                          movie.Poster !== "N/A"
+                            ? movie.Poster
+                            : "/Netflix-assets/assets/media/media0.webp"
+                        }
+                        alt={movie.Title}
+                        rounded
+                        style={{
+                          width: "100%",
+                          maxWidth: 180,
+                          height: 270,
+                          objectFit: "cover",
+                          background: "#111",
+                          cursor: "pointer",
+                          transition: "transform 0.2s",
+                        }}
+                        className="hover-effect"
+                      />
+                    </Link>
                   </Col>
                 ))}
               </Row>
