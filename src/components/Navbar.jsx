@@ -1,5 +1,6 @@
 import React from "react"
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
+import { Link } from "react-router-dom"
 
 const NetflixNavbar = ({ onSearchClick }) => (
   <Navbar bg="black" variant="dark" expand="lg" sticky="top">
@@ -15,11 +16,15 @@ const NetflixNavbar = ({ onSearchClick }) => (
       <Navbar.Toggle aria-controls="netflix-navbar-nav" />
       <Navbar.Collapse id="netflix-navbar-nav">
         <Nav className="me-auto align-items-lg-center">
-          <Nav.Link href="#">Home</Nav.Link>
-          <Nav.Link href="#">TV Shows</Nav.Link>
-          <Nav.Link href="#" active>
+          <Link className="nav-link" to="/">
+            Home
+          </Link>
+          <Link className="nav-link" to="/tv-shows">
+            TV Shows
+          </Link>
+          <Link className="nav-link" to="/" active>
             Movies
-          </Nav.Link>
+          </Link>
           <Nav.Link href="#">Recently Added</Nav.Link>
           <Nav.Link href="#">My List</Nav.Link>
         </Nav>
